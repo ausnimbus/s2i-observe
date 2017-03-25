@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "---> Installing application source..."
+mv /tmp/src/* ./
+
+fix-permissions ./
