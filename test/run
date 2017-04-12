@@ -1,8 +1,13 @@
 #!/bin/bash
 #
 # The 'run' performs a simple test that verifies that STI image.
-# The main focus is that the image prints out the base-usage properly.
-IMAGE_NAME=${TRAVIS_REPO_SLUG-ausnimbus/s2i-observe}
+IMAGE_NAME=quay.io/ausnimbus/s2i-observe
+
+# Install docker-squash
+pip install docker-squash
+
+# Docker login
+docker login -u="$DOCKER_USER" -p="$DOCKER_PASS" quay.io
 
 test_docker_build() {
 	echo "Testing the 'docker build'..."
@@ -28,5 +33,5 @@ check_result $?
 test_docker_run_usage
 check_result $?
 
-curl -X POST -H "Content-Type: application/json" --data '{"docker_tag": latest}' https://registry.hub.docker.com/u/$TRAVIS_REPO_SLUG/trigger/$DOCKER_HUB_TOKEN/
-
+docker-squash -t ${IMAGE_NAME} ${IMAGE_NAME}
+docker push ${IMAGE_NAME}
